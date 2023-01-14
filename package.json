@@ -1,0 +1,21 @@
+{
+  "name": "web-crawler",
+  "version": "1.0.0",
+  "description": "This project is a JavaScript(node.js) application that generates an \"internal links\" report for any website on the internet by crawling each page of the site.",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "jest"
+  },
+  "author": "Arif Bashir Dar",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jsdom": "^2.0.34",
+    "@types/node-fetch": "^2.6.2",
+    "jest": "^29.3.1"
+  },
+  "dependencies": {
+    "jsdom": "^21.0.0",
+    "node-fetch": "^2.6.8"
+  }
+}
