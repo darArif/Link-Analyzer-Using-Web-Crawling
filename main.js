@@ -1,5 +1,4 @@
 const crawlPage = require('./crawl');
-
 function main() {
     if(process.argv.length === 2) {
         console.error('No Base URL Passed!\nExiting...');
@@ -12,8 +11,10 @@ function main() {
     const pages = {};
     const pagesReport = crawlPage(process.argv[2], process.argv[2], pages);
     pagesReport.then((Response)=>{
-        console.log(Response);
-    });
+        console.log(pages);
+        console.log('Crawling Complete!');
+    })
+    
 }
 
 main();

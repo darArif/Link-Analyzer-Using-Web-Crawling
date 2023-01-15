@@ -4,6 +4,8 @@ const url = require('node:url');
 
 const fetch = require('node-fetch');
 
+const path = require('path');
+
 function normaliseURL(passedURL) {
     const urlObj = url.parse(passedURL);
     const fullPath = `${urlObj.host}${urlObj.path}`;
@@ -13,22 +15,26 @@ function normaliseURL(passedURL) {
     return fullPath;
 };
 
-module.exports = function crawlPage(baseURL, currentURL, pages) {
+module.exports = async function crawlPage(baseURL, currentURL, pages) {
     const baseURLObj = url.parse(baseURL);
-
+    
     const currentURLObj = url.parse(currentURL);
 
-    if(baseURLObj.host === currentURLObj.host) {
+    if(baseURL === currentURL || currentURLObj.host === null) {
 
-        let normalisedURL = normaliseURL(currentURL);
+        const newURLObj = url.parse(`${baseURL}${currentURLObj.pathname}`);
+        //console.log(newURLObj);
+        let normalisedURL = normaliseURL(newURLObj.href);
 
         if(pages[normalisedURL] == undefined) {
 
             pages[normalisedURL] = 1;
 
-            console.log(`Crawling ${normalisedURL}`);
+            
 
-            const fetchPromise = fetch(currentURL);
+            const fetchPromise = fetch(newURLObj.href);
+
+            console.log(`Crawling ${newURLObj.href}`);
 
             fetchPromise.then((Response) => {
                 if(!Response.ok) {
@@ -41,18 +47,18 @@ module.exports = function crawlPage(baseURL, currentURL, pages) {
             })
             .then((Response)=> {
                 const dom = new JSDOM(Response);
-                console.log(Response);
                 const unNormalisedURLs = dom.window.document.body.getElementsByTagName('a');
-                console.log(new Array(...unNormalisedURLs));
-                console.log('After unnormalised arrays');
+                
                 for(let i=0; i<unNormalisedURLs.length; i++) {
-                    console.log(`Entered ${i}th loop`);
+                   
+                    console.log(unNormalisedURLs[i].getAttribute('href'));
+                    //console.log(url.parse(unNormalisedURLs[i].getAttribute('href')));
                     crawlPage(baseURL, unNormalisedURLs[i].getAttribute('href'), pages);
-                    console.log(`After ${i}th recursive call`);
+                    
                 }
             })
             .catch((error) => {
-                console.error(`Could not load ${currentURL}: ${error}`);
+                console.error(`Could not load ${newURLObj.href}: ${error}`);
             });
             return pages;
         }
