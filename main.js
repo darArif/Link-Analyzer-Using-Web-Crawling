@@ -10,10 +10,18 @@ function main() {
     console.log('Crawling started!...');
     const pages = {};
     const pagesReport = crawlPage(process.argv[2], process.argv[2], pages);
-    pagesReport.then((Response)=>{
-        console.log(pages);
-        console.log('Crawling Complete!');
-    })
+    setTimeout(()=>{
+        pagesReport.then((Response)=>{
+            console.log(`\n\nThe Link Report is as follows:`);
+            console.log(Response);
+            console.log('\nCrawling Complete!');
+        })
+        
+    }, 10000);
+    // pagesReport.then((Response)=>{
+    //     console.log(pages);
+    //     console.log('Crawling Complete!');
+    // })
     
 }
 

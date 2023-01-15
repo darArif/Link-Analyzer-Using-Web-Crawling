@@ -51,18 +51,18 @@ module.exports = async function crawlPage(baseURL, currentURL, pages) {
                 
                 for(let i=0; i<unNormalisedURLs.length; i++) {
                    
-                    console.log(unNormalisedURLs[i].getAttribute('href'));
+                    //console.log(unNormalisedURLs[i].getAttribute('href'));
                     //console.log(url.parse(unNormalisedURLs[i].getAttribute('href')));
                     crawlPage(baseURL, unNormalisedURLs[i].getAttribute('href'), pages);
                     
                 }
             })
             .catch((error) => {
-                console.error(`Could not load ${newURLObj.href}: ${error}`);
+                console.error(`\nCould not load ${newURLObj.href}: ${error}`);
             });
             return pages;
         }
-        pages.normalisedURL += 1;
+        pages[normalisedURL] += 1;
         return pages;
         
     }
