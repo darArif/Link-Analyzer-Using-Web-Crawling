@@ -1,4 +1,7 @@
 const crawlPage = require('./crawl');
+
+const printReport = require('./report.js');
+
 function main() {
     if(process.argv.length === 2) {
         console.error('No Base URL Passed!\nExiting...');
@@ -9,20 +12,14 @@ function main() {
     } 
     console.log('Crawling started!...');
     const pages = {};
-    const pagesReport = crawlPage(process.argv[2], process.argv[2], pages);
+    const ReportPromise = crawlPage(process.argv[2], process.argv[2], pages);
     setTimeout(()=>{
-        pagesReport.then((Response)=>{
-            console.log(`\n\nThe Link Report is as follows:`);
-            console.log(Response);
-            console.log('\nCrawling Complete!');
+        ReportPromise.then((Response)=>{
+           printReport(pages);
         })
-        
     }, 10000);
-    // pagesReport.then((Response)=>{
-    //     console.log(pages);
-    //     console.log('Crawling Complete!');
-    // })
-    
+
+    module.exports = pages;
 }
 
 main();

@@ -4,8 +4,6 @@ const url = require('node:url');
 
 const fetch = require('node-fetch');
 
-const path = require('path');
-
 function normaliseURL(passedURL) {
     const urlObj = url.parse(passedURL);
     const fullPath = `${urlObj.host}${urlObj.path}`;
@@ -23,20 +21,17 @@ module.exports = async function crawlPage(baseURL, currentURL, pages) {
     if(baseURL === currentURL || currentURLObj.host === null) {
 
         const newURLObj = url.parse(`${baseURL}${currentURLObj.pathname}`);
-        //console.log(newURLObj);
+
         let normalisedURL = normaliseURL(newURLObj.href);
 
         if(pages[normalisedURL] == undefined) {
 
-            pages[normalisedURL] = 1;
-
             
 
-            const fetchPromise = fetch(newURLObj.href);
-
-            console.log(`Crawling ${newURLObj.href}`);
-
-            fetchPromise.then((Response) => {
+            
+            
+            fetch(newURLObj.href)
+            .then((Response) => {
                 if(!Response.ok) {
                     throw new Error(`HTTP Error: ${Response.status}`);
                 }
@@ -46,15 +41,13 @@ module.exports = async function crawlPage(baseURL, currentURL, pages) {
                 return Response.text();
             })
             .then((Response)=> {
+                pages[normalisedURL] = 1;
+                console.log(`Crawling ${newURLObj.href}`);
                 const dom = new JSDOM(Response);
                 const unNormalisedURLs = dom.window.document.body.getElementsByTagName('a');
                 
                 for(let i=0; i<unNormalisedURLs.length; i++) {
-                   
-                    //console.log(unNormalisedURLs[i].getAttribute('href'));
-                    //console.log(url.parse(unNormalisedURLs[i].getAttribute('href')));
                     crawlPage(baseURL, unNormalisedURLs[i].getAttribute('href'), pages);
-                    
                 }
             })
             .catch((error) => {
