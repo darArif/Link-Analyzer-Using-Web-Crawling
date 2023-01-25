@@ -4,6 +4,8 @@ const url = require('node:url');
 
 const fetch = require('node-fetch');
 
+const path = require('path');
+
 function normaliseURL(passedURL) {
     const urlObj = url.parse(passedURL);
     const fullPath = `${urlObj.host}${urlObj.path}`;
@@ -20,7 +22,8 @@ module.exports = async function crawlPage(baseURL, currentURL, pages) {
 
     if(baseURL === currentURL || currentURLObj.host === null) {
 
-        const newURLObj = url.parse(`${baseURL}${currentURLObj.pathname}`);
+        //const newURLObj = url.parse(`${baseURL}${currentURLObj.pathname}`);
+        const newURLObj = path.resolve(baseURL, currentURLObj.pathname);
 
         let normalisedURL = normaliseURL(newURLObj.href);
 
